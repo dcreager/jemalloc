@@ -854,9 +854,50 @@ if test "x${abi}" = "xmacho" ; then
   AC_DEFINE([JEMALLOC_ZONE])
 
   dnl The szone version jumped from 3 to 6 between the OS X 10.5.x and 10.6
-  dnl releases.  malloc_zone_t and malloc_introspection_t have new fields in
-  dnl 10.6, which is the only source-level indication of the change.
+  dnl releases, and from 6 to 8 for 10.7.  malloc_zone_t and
+  dnl malloc_introspection_t have new fields in 10.6, which is the only
+  dnl source-level indication of the change.
   AC_MSG_CHECKING([malloc zone version])
+  AC_TRY_COMPILE([#include <stdlib.h>
+#include <malloc/malloc.h>], [
+	static malloc_zone_t zone;
+	static struct malloc_introspection_t zone_introspect;
+
+	zone.size = NULL;
+	zone.malloc = NULL;
+	zone.calloc = NULL;
+	zone.valloc = NULL;
+	zone.free = NULL;
+	zone.realloc = NULL;
+	zone.destroy = NULL;
+	zone.zone_name = "jemalloc_zone";
+	zone.batch_malloc = NULL;
+	zone.batch_free = NULL;
+	zone.introspect = &zone_introspect;
+	zone.version = 6;
+	zone.memalign = NULL;
+	zone.free_definite_size = NULL;
+	zone.pressure_relief = NULL;
+
+	zone_introspect.enumerator = NULL;
+	zone_introspect.good_size = NULL;
+	zone_introspect.check = NULL;
+	zone_introspect.print = NULL;
+	zone_introspect.log = NULL;
+	zone_introspect.force_lock = NULL;
+	zone_introspect.force_unlock = NULL;
+	zone_introspect.statistics = NULL;
+	zone_introspect.zone_locked = NULL;
+	zone_introspect.enable_discharge_checking = NULL;
+	zone_introspect.disable_discharge_checking = NULL;
+	zone_introspect.discharge = NULL;
+#ifdef __BLOCKS__
+	zone_introspect.enumerate_discharged_pointers = NULL;
+#else
+	zone_introspect.enumerate_unavailable_without_blocks = NULL;
+#endif
+], [AC_DEFINE_UNQUOTED([JEMALLOC_ZONE_VERSION], [8])
+    AC_MSG_RESULT([8])],
   AC_TRY_COMPILE([#include <stdlib.h>
 #include <malloc/malloc.h>], [
 	static malloc_zone_t zone;
@@ -889,7 +930,7 @@ if test "x${abi}" = "xmacho" ; then
 ], [AC_DEFINE_UNQUOTED([JEMALLOC_ZONE_VERSION], [6])
     AC_MSG_RESULT([6])],
    [AC_DEFINE_UNQUOTED([JEMALLOC_ZONE_VERSION], [3])
-   AC_MSG_RESULT([3])])
+   AC_MSG_RESULT([3])]))
 fi
 
 dnl ============================================================================

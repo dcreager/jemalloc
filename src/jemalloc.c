@@ -856,9 +856,6 @@ malloc_init_hard(void)
 	arenas[0] = init_arenas[0];
 
 #ifdef JEMALLOC_ZONE
-	/* Register the custom zone. */
-	malloc_zone_register(create_zone());
-
 	/*
 	 * Convert the default szone to an "overlay zone" that is capable of
 	 * deallocating szone-allocated objects, but allocating new objects

@@ -77,7 +77,6 @@
 #define	ckh_string_keycomp JEMALLOC_N(ckh_string_keycomp)
 #define	ckh_try_bucket_insert JEMALLOC_N(ckh_try_bucket_insert)
 #define	ckh_try_insert JEMALLOC_N(ckh_try_insert)
-#define	create_zone JEMALLOC_N(create_zone)
 #define	ctl_boot JEMALLOC_N(ctl_boot)
 #define	ctl_bymib JEMALLOC_N(ctl_bymib)
 #define	ctl_byname JEMALLOC_N(ctl_byname)

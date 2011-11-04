@@ -12,7 +12,6 @@
 /******************************************************************************/
 #ifdef JEMALLOC_H_EXTERNS
 
-malloc_zone_t *create_zone(void);
 void	szone2ozone(malloc_zone_t *zone);
 
 #endif /* JEMALLOC_H_EXTERNS */
